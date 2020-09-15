@@ -50,26 +50,38 @@ public class GridManager : MonoBehaviour
         //RectTransform UI_Element;
         RectTransform CanvasRect = canvas.GetComponent<RectTransform>();
 
+        //float tempIncrement = 0;
         for (int x = 0; x < columns; ++x)
         {
+            
             for (int y = 0; y < rows; ++y)
             {
                 float xPosition = transform.position.x + (width * x);
+                xPosition = xPosition * 0.8f;
                 float yPosition = transform.position.y + (height * y);
-                if (x % 2 != 1)
+                
+                if (x % 2 == 1)
                 {
-                    yPosition = transform.position.y + (width * y + 0.3f);
+                    //xPosition -= 0.15f;
+                    yPosition -= 0.3f;
                     
                 }
-
+                /*
+                if(x % 2 == 0)
+                {
+                    //xPosition -= tempIncrement;
+                }
+                */
+                
+                
                 GameObject newGem = Instantiate(
                   hexagon,
                   new Vector3(xPosition, yPosition, 0),
                   hexagon.transform.rotation
                 );
                 newGem.name = x + "," + y;
-
-                //if(x % 2 != 1 && x != 0) //debug - this spawn logic might be unnecessary. try old logic with the world space canvas
+                
+                //spawn buttons
                 if (x != 0 && y != 0)
                 {
                     if(y != columns)
@@ -79,21 +91,21 @@ public class GridManager : MonoBehaviour
                         buttonPrefab.transform.rotation);
                         testgameObject2.transform.SetParent(canvas.transform, true);
 
-                        buttonPositions.Add(new Vector2(xPosition - 0.38f, yPosition));
+                        //buttonPositions.Add(new Vector2(xPosition - 0.38f, yPosition));
 
                         GameObject testgameObject = Instantiate(buttonPrefab,
-                        new Vector3(xPosition - 0.35f, yPosition - 0.34f, 0),
+                        new Vector3(xPosition - 0.2f, yPosition - 0.34f, 0),
                         buttonPrefab.transform.rotation);
                         testgameObject.transform.SetParent(canvas.transform, true);
-                        buttonPositions.Add(new Vector2(xPosition - 0.35f, yPosition - 0.34f));
+                        //buttonPositions.Add(new Vector2(xPosition - 0.35f, yPosition - 0.34f));
                     }
                     else
                     {
                         GameObject testgameObject = Instantiate(buttonPrefab,
-                        new Vector3(xPosition - 0.35f, yPosition - 0.34f, 0),
+                        new Vector3(xPosition - 0.2f, yPosition - 0.34f, 0),
                         buttonPrefab.transform.rotation);
                         testgameObject.transform.SetParent(canvas.transform, true);
-                        buttonPositions.Add(new Vector2(xPosition - 0.35f, yPosition - 0.34f));
+                        //buttonPositions.Add(new Vector2(xPosition - 0.35f, yPosition - 0.34f));
 
                         //CheckCollision(new Vector2(xPosition - 0.35f, yPosition - 0.34f), 0.5f);
 
@@ -103,7 +115,7 @@ public class GridManager : MonoBehaviour
                         new Vector3(xPosition - 0.38f, yPosition, 0),
                         buttonPrefab.transform.rotation);
                             testgameObject2.transform.SetParent(canvas.transform, true);
-                            buttonPositions.Add(new Vector2(xPosition - 0.38f, yPosition));
+                            //buttonPositions.Add(new Vector2(xPosition - 0.38f, yPosition));
                         }
                     }
                     
@@ -116,7 +128,7 @@ public class GridManager : MonoBehaviour
                         new Vector3(xPosition - 0.38f, yPosition, 0),
                         buttonPrefab.transform.rotation);
                     testgameObject2.transform.SetParent(canvas.transform, true);
-                    buttonPositions.Add(new Vector2(xPosition - 0.38f, yPosition));
+                    //buttonPositions.Add(new Vector2(xPosition - 0.38f, yPosition));
                 }
                 
                 hexagons[x, y] = newGem;
@@ -126,6 +138,12 @@ public class GridManager : MonoBehaviour
                 Color32 randomColor = colorArray[Random.Range(0, colorArray.Length)];
                 newGem.GetComponent<SpriteRenderer>().color = new Color32(randomColor.r, randomColor.g, randomColor.b, 255);//colorArray[Random.Range(0, colorArray.Length)];
             }
+            /*
+            if (x % 4 == 0)
+            {
+                tempIncrement += 0.3f;
+            }
+            */
         }
 
         //CheckCollision(new Vector3(0, 0, 0), 100);
