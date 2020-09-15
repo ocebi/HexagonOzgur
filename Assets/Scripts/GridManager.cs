@@ -15,6 +15,11 @@ public class GridManager : MonoBehaviour
 
     public Color32[] colorArray;
 
+    public Canvas canvas;
+
+    public GameObject buttonPrefab; //debug
+    
+
     void Start()
     {
         instance = GetComponent<GridManager>();
@@ -26,27 +31,33 @@ public class GridManager : MonoBehaviour
 
     void Update()
     {
-        /*
+        
         if (Input.GetMouseButtonDown(0))
         {
-            Clicked();
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            print(ray.ToString());
         }
-        */
+        
     }
 
     private void GenerateGrid(float width, float height)
     {
         hexagons = new GameObject[columns, rows];
 
-        for (int x = 0; x < columns; x++)
+        //debug
+        RectTransform UI_Element;
+        RectTransform CanvasRect = canvas.GetComponent<RectTransform>();
+
+        for (int x = 0; x < columns; ++x)
         {
-            for (int y = 0; y < rows; y++)
+            for (int y = 0; y < rows; ++y)
             {
                 float xPosition = transform.position.x + (width * x);
                 float yPosition = transform.position.y + (height * y);
                 if (x % 2 != 1)
                 {
                     yPosition = transform.position.y + (width * y + 0.3f);
+                    
                 }
 
                 GameObject newGem = Instantiate(
@@ -54,7 +65,60 @@ public class GridManager : MonoBehaviour
                   new Vector3(xPosition, yPosition, 0),
                   hexagon.transform.rotation
                 );
+                newGem.name = x + "," + y;
 
+                //if(x % 2 != 1 && x != 0) //debug - this spawn logic might be unnecessary. try old logic with the world space canvas
+                if (x != 0 && y != 0)
+                {
+                    /*
+                    if(y == columns)
+                    {
+                        GameObject testgameObject = Instantiate(buttonPrefab,
+                        new Vector3(xPosition - 0.35f, yPosition - 0.34f, 0),
+                        buttonPrefab.transform.rotation);
+                        testgameObject.transform.SetParent(canvas.transform, true);
+                    }
+                    else
+                    {
+                    */
+                    if(y != columns)
+                    { 
+                        GameObject testgameObject2 = Instantiate(buttonPrefab,
+                        new Vector3(xPosition - 0.38f, yPosition, 0),
+                        buttonPrefab.transform.rotation);
+                        testgameObject2.transform.SetParent(canvas.transform, true);
+
+                        GameObject testgameObject = Instantiate(buttonPrefab,
+                        new Vector3(xPosition - 0.35f, yPosition - 0.34f, 0),
+                        buttonPrefab.transform.rotation);
+                        testgameObject.transform.SetParent(canvas.transform, true);
+                    }
+                    else
+                    {
+                        GameObject testgameObject = Instantiate(buttonPrefab,
+                        new Vector3(xPosition - 0.35f, yPosition - 0.34f, 0),
+                        buttonPrefab.transform.rotation);
+                        testgameObject.transform.SetParent(canvas.transform, true);
+                        if(x % 2 == 1)
+                        {
+                            GameObject testgameObject2 = Instantiate(buttonPrefab,
+                        new Vector3(xPosition - 0.38f, yPosition, 0),
+                        buttonPrefab.transform.rotation);
+                            testgameObject2.transform.SetParent(canvas.transform, true);
+                        }
+                    }
+                    
+                    
+                }
+                
+                else if(x != 0 && y == 0 && (x % 2 == 0))
+                {
+                    GameObject testgameObject2 = Instantiate(buttonPrefab,
+                        new Vector3(xPosition - 0.38f, yPosition, 0),
+                        buttonPrefab.transform.rotation);
+                    testgameObject2.transform.SetParent(canvas.transform, true);
+                }
+                
                 hexagons[x, y] = newGem;
 
                 newGem.transform.parent = transform;
@@ -63,19 +127,17 @@ public class GridManager : MonoBehaviour
                 newGem.GetComponent<SpriteRenderer>().color = new Color32(randomColor.r, randomColor.g, randomColor.b, 255);//colorArray[Random.Range(0, colorArray.Length)];
             }
         }
-    }
-    /*
-    private void Clicked()
-    {
-        print("here");
-        var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        RaycastHit hit = new RaycastHit();
-
-        if (Physics.Raycast(ray, out hit))
+        /*
+        for(int x = 0; x < columns; ++x)
         {
-            Debug.Log(hit.point.ToString());
+            for (int y = 0; y < rows; ++y)
+            {
+
+            }
         }
+        */
     }
-    */
+
+    
+
 }
