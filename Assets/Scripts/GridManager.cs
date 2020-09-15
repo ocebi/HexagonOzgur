@@ -18,6 +18,8 @@ public class GridManager : MonoBehaviour
     public Canvas canvas;
 
     public GameObject buttonPrefab; //debug
+
+    private List<Vector2> buttonPositions = new List<Vector2>();
     
 
     void Start()
@@ -45,7 +47,7 @@ public class GridManager : MonoBehaviour
         hexagons = new GameObject[columns, rows];
 
         //debug
-        RectTransform UI_Element;
+        //RectTransform UI_Element;
         RectTransform CanvasRect = canvas.GetComponent<RectTransform>();
 
         for (int x = 0; x < columns; ++x)
@@ -70,17 +72,6 @@ public class GridManager : MonoBehaviour
                 //if(x % 2 != 1 && x != 0) //debug - this spawn logic might be unnecessary. try old logic with the world space canvas
                 if (x != 0 && y != 0)
                 {
-                    /*
-                    if(y == columns)
-                    {
-                        GameObject testgameObject = Instantiate(buttonPrefab,
-                        new Vector3(xPosition - 0.35f, yPosition - 0.34f, 0),
-                        buttonPrefab.transform.rotation);
-                        testgameObject.transform.SetParent(canvas.transform, true);
-                    }
-                    else
-                    {
-                    */
                     if(y != columns)
                     { 
                         GameObject testgameObject2 = Instantiate(buttonPrefab,
@@ -88,10 +79,13 @@ public class GridManager : MonoBehaviour
                         buttonPrefab.transform.rotation);
                         testgameObject2.transform.SetParent(canvas.transform, true);
 
+                        buttonPositions.Add(new Vector2(xPosition - 0.38f, yPosition));
+
                         GameObject testgameObject = Instantiate(buttonPrefab,
                         new Vector3(xPosition - 0.35f, yPosition - 0.34f, 0),
                         buttonPrefab.transform.rotation);
                         testgameObject.transform.SetParent(canvas.transform, true);
+                        buttonPositions.Add(new Vector2(xPosition - 0.35f, yPosition - 0.34f));
                     }
                     else
                     {
@@ -99,12 +93,17 @@ public class GridManager : MonoBehaviour
                         new Vector3(xPosition - 0.35f, yPosition - 0.34f, 0),
                         buttonPrefab.transform.rotation);
                         testgameObject.transform.SetParent(canvas.transform, true);
+                        buttonPositions.Add(new Vector2(xPosition - 0.35f, yPosition - 0.34f));
+
+                        //CheckCollision(new Vector2(xPosition - 0.35f, yPosition - 0.34f), 0.5f);
+
                         if(x % 2 == 1)
                         {
                             GameObject testgameObject2 = Instantiate(buttonPrefab,
                         new Vector3(xPosition - 0.38f, yPosition, 0),
                         buttonPrefab.transform.rotation);
                             testgameObject2.transform.SetParent(canvas.transform, true);
+                            buttonPositions.Add(new Vector2(xPosition - 0.38f, yPosition));
                         }
                     }
                     
@@ -117,6 +116,7 @@ public class GridManager : MonoBehaviour
                         new Vector3(xPosition - 0.38f, yPosition, 0),
                         buttonPrefab.transform.rotation);
                     testgameObject2.transform.SetParent(canvas.transform, true);
+                    buttonPositions.Add(new Vector2(xPosition - 0.38f, yPosition));
                 }
                 
                 hexagons[x, y] = newGem;
@@ -127,6 +127,8 @@ public class GridManager : MonoBehaviour
                 newGem.GetComponent<SpriteRenderer>().color = new Color32(randomColor.r, randomColor.g, randomColor.b, 255);//colorArray[Random.Range(0, colorArray.Length)];
             }
         }
+
+        //CheckCollision(new Vector3(0, 0, 0), 100);
         /*
         for(int x = 0; x < columns; ++x)
         {
@@ -136,8 +138,33 @@ public class GridManager : MonoBehaviour
             }
         }
         */
+        /*
+        foreach(Vector2 vec2 in buttonPositions)
+        {
+            CheckCollision(vec2, 0.2f);
+        }
+        print("Total: " + buttonPositions.Count);
+        */
     }
+    /*
+    void CheckCollision(Vector2 center, float radius)
+    {
+        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(center, radius);
 
-    
+        int i = 0;
+        foreach (var hitCollider in hitColliders)
+        {
+            print("Collider" + i + ": " + hitCollider.gameObject.name);
+            ++i;
+            hitCollider.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
+        }
+    }
+    */
+    /*
+    public void OnButtonClicked(Vector2 buttonPosition)
+    {
+
+    }
+    */
 
 }
