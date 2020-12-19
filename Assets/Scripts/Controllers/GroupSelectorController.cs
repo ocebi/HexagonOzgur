@@ -1,4 +1,4 @@
-﻿using Pixelplacement;
+﻿using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -70,7 +70,7 @@ public class GroupSelectorController : MonoBehaviour
 
     private void RotateGroup()
     {
-        Tween.Rotate(transform, new Vector3(0, 0, 120 * swipeDirection), Space.World, 0.15f, 0.05f, null, Tween.LoopType.None, null, RotationCheck);
+        transform.DORotate(new Vector3(0, 0, 120 * swipeDirection), 0.2f, RotateMode.WorldAxisAdd).OnComplete(RotationCheck);
     }
 
     /// <summary>
@@ -79,18 +79,16 @@ public class GroupSelectorController : MonoBehaviour
     /// </summary>
     private void RotationCheck()
     {
+        Debug.Log("Inside rotation check");
         SetGroupTransform(false);
         GroupPositionCorrection();
         
         if(rotationStage < 2)
         {
-            //foreach (GridObject go in currentGroup)
-            //    go.neighbors = go.GetNeighbors();
             var explosion = ExplosionManager.Instance.CheckExplosion(currentGroup);
             if (explosion)
             {
                 Debug.Log("Explosion");
-                //SetGroupTransform(false);
                 gameObject.SetActive(false);
                 this.enabled = false;
                 return;

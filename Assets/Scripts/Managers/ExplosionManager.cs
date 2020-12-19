@@ -1,4 +1,4 @@
-﻿using Pixelplacement;
+﻿using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -69,7 +69,6 @@ public class ExplosionManager : Singleton<ExplosionManager>
     /// <param name="moveList"> Heads of the blocks. </param>
     public void SetupBlocks(List<GridObject> moveList)
     {
-        Debug.Log("Inside move list");
         foreach (var go in moveList)
         {
             go.neighbors = go.GetNeighbors();
@@ -184,6 +183,13 @@ public class ExplosionManager : Singleton<ExplosionManager>
     /// <param name="go"> Head of the block. </param>
     private IEnumerator DropBlock(GridObject go)
     {
+        foreach(Transform t in go.transform)
+        {
+            t.position = new Vector3(go.transform.position.x,
+                    t.position.y,
+                    t.position.z);
+        }
+
         ++blocksFallingDown;
         go.neighbors = go.GetNeighbors();
 
@@ -191,10 +197,17 @@ public class ExplosionManager : Singleton<ExplosionManager>
             !Mathf.Approximately(go.transform.localPosition.y, 0f) &&
             !Mathf.Approximately(go.transform.localPosition.y, -0.35f))
         {
-            var isTweenFinished = Tween.Position(go.transform, new Vector3(go.transform.position.x, go.neighbors.down.y - 0.05f, go.transform.position.z), 0.1f, 0f);
-            while (isTweenFinished.Status != Tween.TweenStatus.Finished)
+            var tween = go.transform.DOMoveY(go.neighbors.down.y - 0.05f, 0.1f);
+            while (tween != null && tween.IsActive())
             {
-                yield return null;
+                foreach (Transform t in go.transform)
+                {
+                    t.position = new Vector3(go.transform.position.x,
+                            t.position.y,
+                            t.position.z);
+                }
+                //yield return null;
+                yield return new WaitForSeconds(0.01f);
             }
             GridManager.RoundPosition(go);
             GridManager.RoundScale(go);

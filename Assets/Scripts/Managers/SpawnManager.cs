@@ -31,6 +31,21 @@ public class SpawnManager : Singleton<SpawnManager>
     }
     #endregion
 
+    private void Start()
+    {
+        List<Bomb> tempBombList = new List<Bomb>();
+        for (int i = 0; i < 10; ++i)
+        {
+            var bomb = SpawnBomb(-10, -10);
+            tempBombList.Add(bomb.GetComponent<Bomb>());
+        }
+        foreach(var bomb in tempBombList)
+        {
+            AddToBombPool(bomb);
+            bomb.gameObject.SetActive(false);
+        }
+    }
+
     #region Public Methods
 
     /// <summary>
